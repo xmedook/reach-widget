@@ -1,0 +1,21 @@
+{
+  "name": "reach-widget-backend",
+  "version": "1.0.0",
+  "description": "Reach Widget — Multi-channel lead capture API",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "migrate": "node src/db/migrate.js",
+    "seed": "node src/db/seed_demo.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "pg": "^8.13.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

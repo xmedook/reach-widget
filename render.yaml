@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: reach-widget-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install && node src/db/migrate.js
+    startCommand: node src/index.js
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: WHATSAPP_TOKEN
+        sync: false
+      - key: WHATSAPP_PHONE_ID
+        sync: false
+      - key: WHATSAPP_VERIFY_TOKEN
+        sync: false
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_FROM_NUMBER
+        sync: false
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3000"
