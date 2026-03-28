@@ -109,6 +109,49 @@ Usa el token `demo_koode_2026` para probar:
 </script>
 ```
 
+## Integración con OpenClaw (nexo Command Center)
+
+Reach Widget puede conectarse a cualquier instancia de OpenClaw para que el agente
+AI del cliente maneje toda la conversación automáticamente.
+
+### Configurar un widget con OpenClaw
+
+```
+POST /api/widgets
+{
+  "name": "Mi Sitio Web",
+  "owner_email": "cliente@empresa.com",
+  "welcome_message": "¡Hola! ¿En qué te ayudamos?",
+  "openclaw_enabled": true,
+  "openclaw_gateway_url": "https://cliente.nexosrv.one",
+  "openclaw_gateway_token": "TOKEN_DEL_GATEWAY",
+  "openclaw_agent_id": "cliente-assistant",
+  "channels": ["whatsapp", "telegram"]
+}
+```
+
+### Flujo completo
+
+1. Visitante llena el widget en el sitio del cliente
+2. Reach Widget registra el lead y llama al gateway de OpenClaw
+3. OpenClaw envía el mensaje de bienvenida via WhatsApp/Telegram
+4. El agente (con SOUL.md del cliente) responde automáticamente
+5. Dashboard de Reach Widget muestra el lead con estado "en conversación"
+
+### Test de conectividad
+
+```
+POST /api/widgets/:token/test-gateway
+```
+
+Retorna `{ ok: true/false, version, latencyMs }`.
+
+### Migración para bases existentes
+
+```bash
+npm run migrate:openclaw
+```
+
 ## Deploy en Render
 
 1. Conecta el repo a Render

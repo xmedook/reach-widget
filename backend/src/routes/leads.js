@@ -3,6 +3,7 @@ const { Pool } = require("pg");
 const { sendWhatsApp } = require("../services/whatsapp");
 const { sendSMS } = require("../services/sms");
 const { getTelegramDeepLink } = require("../services/telegram");
+const { sendLeadToGateway } = require("../services/openclaw");
 
 const router = Router();
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -48,6 +49,31 @@ router.post("/", async (req, res) => {
     let status = "sent";
     let errorMessage = null;
 
+    if (widget.openclaw_enabled && widget.openclaw_gateway_url) {
+      // Ruta OpenClaw: delega toda la comunicación al gateway del cliente
+      const result = await sendLeadToGateway(
+        {
+          gatewayUrl: widget.openclaw_gateway_url,
+          gatewayToken: widget.openclaw_gateway_token,
+          agentId: widget.openclaw_agent_id,
+        },
+        { id: leadId, phone: cleanPhone, country_code: cc, channel, sourceUrl: source_url },
+        message
+      );
+
+      if (result.success) {
+        await pool.query(
+          "UPDATE leads SET status = 'sent', metadata = metadata || $1, updated_at = NOW() WHERE id = $2",
+          [JSON.stringify({ openclaw_session_id: result.sessionId }), leadId]
+        );
+        res.json({ ok: true, lead_id: leadId, status: "sent", via: "openclaw" });
+        return;
+      }
+      // OpenClaw falló — fallback a canal directo
+      console.warn(`[OpenClaw] Fallback to direct channel for lead ${leadId}: ${result.error}`);
+    }
+
+    // Ruta directa (Meta API / Twilio / Telegram deep link)
     if (channel === "whatsapp") {
       const result = await sendWhatsApp(fullPhone, message, widget);
       if (result.success) {

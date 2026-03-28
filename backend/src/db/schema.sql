@@ -9,7 +9,11 @@ CREATE TABLE IF NOT EXISTS widgets (
   telegram_bot_username VARCHAR(100),
   channels JSONB DEFAULT '["whatsapp","sms","telegram"]',
   active BOOLEAN DEFAULT true,
-  created_at TIMESTAMP DEFAULT NOW()
+  created_at TIMESTAMP DEFAULT NOW(),
+  openclaw_gateway_url TEXT,
+  openclaw_gateway_token TEXT,
+  openclaw_agent_id TEXT,
+  openclaw_enabled BOOLEAN DEFAULT false
 );
 
 CREATE TABLE IF NOT EXISTS leads (

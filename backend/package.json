@@ -6,10 +6,12 @@
   "scripts": {
     "start": "node src/index.js",
     "migrate": "node src/db/migrate.js",
+    "migrate:openclaw": "node src/db/migrate_openclaw.js",
     "seed": "node src/db/seed_demo.js",
     "dev": "node --watch src/index.js"
   },
   "dependencies": {
+    "axios": "^1.14.0",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",
